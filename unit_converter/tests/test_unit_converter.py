@@ -19,6 +19,5 @@ def test_factor_conversion(value, from_unit, to_unit, expected):
     (20, 'degree celsius', 'degree fahrenheit', (68, 'degree fahrenheit'))
 ])
 def test_offset_conversion(value, from_unit, to_unit, expected):
-    value, unit = convert(value, from_unit, to_unit)
-    assert round(value,0) == expected[0]
-    assert unit == expected[1]
+    actual = convert(value, from_unit, to_unit)
+    assert actual == expected

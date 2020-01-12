@@ -30,18 +30,13 @@ units.append({'name': 'degree fahrenheit', 'symbol': 'F', 'quantity': 'temperatu
 units.append({'name': 'degree celsius', 'symbol': 'C', 'quantity': 'temperature', 'type': 'derived', 'base_unit': 'kelvin'})
 
 
-
+# todo: use decimal
+# todo: add rounding param or general rounding rule
 
 def convert(value, from_unit, to_unit):
-    # todo: check if unit is derived
-    # derived to base -> one step
-    # base to derived -> one step
-    # derived to derived -> two steps
 
-    # todo: add rounding param
-
-    #if from_unit == to_unit:
-    #    return value, from_unit
+    if from_unit == to_unit:
+        return value, from_unit
 
     [unit1] = [u for u in units if u['name'] == from_unit]
     [unit2] = [u for u in units if u['name'] == to_unit]
@@ -49,20 +44,15 @@ def convert(value, from_unit, to_unit):
     if unit1['base_unit'] != unit2['base_unit']:
         raise Exception('Units are not convertable')
 
-    
-
     # one step conversion
     uc = first_or_default([uc for uc in unit_conversions if uc['from'] == from_unit and uc['to'] == to_unit])
     if uc:
         result = ((value + uc['from_offset']) * uc['multiplicand'] / uc['denominator']) + uc['to_offset']
         return (result, uc['to'])
     
-    # todo: if one unit is base there must be a conversion entry...
-    
     # no conversion exists -> try two step conversion
     [base_unit] = [u['base_unit'] for u in units if u['name'] == to_unit]
 
-    # todo: only supports two levels --> fix
     x1 = convert(value, from_unit, base_unit)
     return convert(*x1, to_unit)
 
